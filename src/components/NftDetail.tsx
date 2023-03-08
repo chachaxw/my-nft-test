@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import { useState, useEffect } from "react";
 import {
   Accordion,
@@ -23,7 +24,7 @@ import type { NFT } from "@/api/types";
 import { getTokenId, formatAddress } from "@/utils/utils";
 import styles from "@/styles/NftGallery.module.css";
 
-import { Thumbnail } from "./NftCard";
+import { Thumbnail, VerifiedIcon } from "./NftCard";
 
 interface NftDetailProps {
   nft?: NFT;
@@ -49,6 +50,8 @@ export default function NftDetail(props: NftDetailProps) {
     }
   };
 
+  console.log(nft);
+
   return (
     <Modal size="5xl" isCentered isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
@@ -68,6 +71,19 @@ export default function NftDetail(props: NftDetailProps) {
             />
           </div>
           <div style={{ marginLeft: 20, flex: 1 }}>
+            <Box display="flex" alignItems="center">
+              <Link
+                isExternal
+                color="blue"
+                href={nft?.contractMetadata?.openSea?.externalUrl}
+              >
+                {nft?.contractMetadata?.openSea?.collectionName}
+              </Link>
+              <VerifiedIcon
+                style={{ maxHeight: 20, marginLeft: 6 }}
+                status={nft?.contractMetadata?.openSea?.safelistRequestStatus}
+              />
+            </Box>
             <Text
               paddingTop="2"
               paddingBottom="2"
@@ -101,14 +117,6 @@ export default function NftDetail(props: NftDetailProps) {
               >
                 <Text>Token Standard</Text>
                 <Text>{nft?.contractMetadata?.tokenType}</Text>
-              </ListItem>
-              <ListItem
-                paddingTop="2"
-                display="flex"
-                justifyContent="space-between"
-              >
-                <Text>Chain</Text>
-                <Text>Ethereum</Text>
               </ListItem>
               <ListItem
                 paddingTop="2"

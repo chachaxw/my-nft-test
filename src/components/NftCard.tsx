@@ -3,6 +3,7 @@ import { CSSProperties } from "react";
 import Image from "next/image";
 import styles from "@/styles/NftGallery.module.css";
 import type { NFT, Media } from "@/api/types";
+import { getTokenId } from "@/utils/utils";
 
 export interface Props {
   nft: NFT;
@@ -44,8 +45,32 @@ export function Thumbnail({ title, media, style }: ThumbnailProps) {
   );
 }
 
+export interface VerifiedIconProps {
+  status?: string;
+  style?: CSSProperties;
+}
+
+export function VerifiedIcon({ status, style }: VerifiedIconProps) {
+  if (!status) {
+    return null;
+  }
+
+  return (
+    <img
+      src={
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/Twitter_Verified_Badge.svg/2048px-Twitter_Verified_Badge.svg.png"
+      }
+      width="20px"
+      height="20px"
+      alt="verified"
+      style={style}
+    />
+  );
+}
+
 export default function NftCard(props: Props) {
   const { nft, onClick } = props;
+  const tokenId = getTokenId(nft);
 
   return (
     <div
@@ -57,23 +82,17 @@ export default function NftCard(props: Props) {
       </div>
       <div className={styles.info_container}>
         <div className={styles.title_container}>
-          <h3>{nft.contractMetadata?.name ?? nft.title}</h3>
+          <h3>
+            {`${nft?.contractMetadata?.name ?? nft?.title}` + ` #${tokenId}`}
+          </h3>
         </div>
         <hr className={styles.separator} />
         <div className={styles.symbol_contract_container}>
           <div className={styles.symbol_container}>
             <p>{nft.contractMetadata?.symbol}</p>
-            {nft.contractMetadata?.openSea?.safelistRequestStatus ===
-            "verified" ? (
-              <img
-                src={
-                  "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/Twitter_Verified_Badge.svg/2048px-Twitter_Verified_Badge.svg.png"
-                }
-                width="20px"
-                height="20px"
-                alt="verified"
-              />
-            ) : null}
+            <VerifiedIcon
+              status={nft.contractMetadata?.openSea?.safelistRequestStatus}
+            />
           </div>
           <div className={styles.contract_container}>
             <p className={styles.contract_container}>
