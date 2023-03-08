@@ -10,16 +10,6 @@ export interface Props {
   onClick?: (nft: NFT) => void;
 }
 
-function Placeholder() {
-  return (
-    <img
-      alt="Placeholder"
-      style={{ objectFit: "scale-down" }}
-      src={"/placeholder.png"}
-    />
-  );
-}
-
 export interface ThumbnailProps {
   title?: string;
   media?: Media[];
@@ -41,7 +31,11 @@ export function Thumbnail({ title, media, style }: ThumbnailProps) {
   return thumbnail ? (
     <img alt={title} src={`${thumbnail}`} style={style} />
   ) : (
-    <Placeholder />
+    <img
+      alt="Placeholder"
+      style={{ objectFit: "scale-down" }}
+      src={"/placeholder.png"}
+    />
   );
 }
 
