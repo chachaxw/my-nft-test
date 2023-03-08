@@ -3,10 +3,16 @@ export type ID = {
   tokenMetadata: { tokenType: string };
 };
 
+export type Attribute = {
+  trait_type: string;
+  value: string;
+};
+
 export type Metadata = {
   name: string;
   image: string;
   description: string;
+  attributes: Attribute[];
 };
 
 export type TokenUri = {
@@ -26,6 +32,7 @@ export type OpenSea = {
   safelistRequestStatus: string;
   twitterUsername: string;
   lastIngestedAt: string;
+  externalUrl?: string;
 };
 
 export type ContractMetadata = {

@@ -11,7 +11,7 @@
 .loading_box {
   width: 100%;
   display: flex;
-  margin-top: 4rem;
+  margin-top: 6rem;
   justify-content: center;
   grid-column-start: 2;
   grid-column-end: 4;
@@ -38,6 +38,7 @@
   background-color: #fff;
   border: 1px solid #cfd9f0;
   transition: box-shadow 0.3s ease;
+  cursor: pointer;
 }
 
 .card_container:hover {

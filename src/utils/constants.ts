@@ -1,1 +1,3 @@
 export const TEST_ADDRESS = "0x09fC43682a7382f8129807816B44ADD1049DecEA";
+
+export const GET_NFTS = `${process.env.NEXT_PUBLIC_DEFAULT_CHAIN}/getNFTs`;
