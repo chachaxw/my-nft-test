@@ -169,7 +169,9 @@ export default function NftDetail(props: NftDetailProps) {
           </div>
         </ModalBody>
         <ModalFooter>
-          <Button onClick={() => handleGoTo(nft)}>Go to Opensea</Button>
+          <Button color="blue.400" onClick={() => handleGoTo(nft)}>
+            Go to Opensea
+          </Button>
         </ModalFooter>
       </ModalContent>
     </Modal>
