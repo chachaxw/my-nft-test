@@ -50,8 +50,6 @@ export default function NftDetail(props: NftDetailProps) {
     }
   };
 
-  console.log(nft);
-
   return (
     <Modal size="5xl" isCentered isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
@@ -93,7 +91,7 @@ export default function NftDetail(props: NftDetailProps) {
             </Text>
             <List marginBottom="5">
               <ListItem display="flex" justifyContent="space-between">
-                <Text>Contract Address</Text>
+                <Text color="gray.500">Contract Address</Text>
                 <Link
                   isExternal
                   color="blue"
@@ -107,7 +105,7 @@ export default function NftDetail(props: NftDetailProps) {
                 display="flex"
                 justifyContent="space-between"
               >
-                <Text>Token ID</Text>
+                <Text color="gray.500">Token ID</Text>
                 <Text>{tokenId}</Text>
               </ListItem>
               <ListItem
@@ -115,7 +113,7 @@ export default function NftDetail(props: NftDetailProps) {
                 display="flex"
                 justifyContent="space-between"
               >
-                <Text>Token Standard</Text>
+                <Text color="gray.500">Token Standard</Text>
                 <Text>{nft?.contractMetadata?.tokenType}</Text>
               </ListItem>
               <ListItem
@@ -123,7 +121,7 @@ export default function NftDetail(props: NftDetailProps) {
                 display="flex"
                 justifyContent="space-between"
               >
-                <Text>Chain</Text>
+                <Text color="gray.500">Chain</Text>
                 <Text>Ethereum</Text>
               </ListItem>
             </List>
@@ -147,7 +145,7 @@ export default function NftDetail(props: NftDetailProps) {
                           justifyContent="space-between"
                           key={item.trait_type + index}
                         >
-                          <Text>{item.trait_type}</Text>
+                          <Text color="gray.500">{item.trait_type}</Text>
                           <Text>{item.value}</Text>
                         </ListItem>
                       ))}
