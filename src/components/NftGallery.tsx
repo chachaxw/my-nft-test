@@ -1,60 +1,67 @@
-import { useCallback, useEffect, useState } from "react";
-
+import { useState, Suspense } from "react";
+import { Spinner, useDisclosure } from "@chakra-ui/react";
 import styles from "@/styles/NftGallery.module.css";
 import { TEST_ADDRESS } from "@/utils/constants";
-import NftCard, { NftProps } from "./NftCard";
+import { NftDataResponse, fetchNftData } from "@/api/fetchNftList";
+import type { NFT } from "@/api/types";
 
-export default function NFTGallery() {
-  const [nfts, setNfts] = useState<NftProps[]>([]);
-  const [address] = useState(TEST_ADDRESS);
-  const [isLoading, setIsLoading] = useState(false);
+import NftCard from "./NftCard";
+import NftDetail from "./NftDetail";
 
-  const fetchNFTs = useCallback(
-    async (pageKey?: string) => {
-      setIsLoading(true);
-      setNfts([]);
+interface GalleryListProps {
+  resource: NftDataResponse;
+}
 
-      const endpoint = `${process.env.NEXT_PUBLIC_DEFAULT_CHAIN}/getNFTs?owner=${address}`;
+function GalleryList({ resource }: GalleryListProps) {
+  const [selected, setSelected] = useState<NFT>();
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const { ownedNfts } = resource.nfts.read() ?? {};
 
-      try {
-        const res = await fetch(endpoint, {
-          method: "get",
-          redirect: "follow",
-        }).then((res) => res.json());
+  const handleClick = (nft: NFT) => {
+    onOpen();
+    setSelected(nft);
+  };
 
-        console.log("res", res);
+  const handleClose = () => {
+    onClose();
+    setSelected(undefined);
+  };
 
-        setNfts(res.ownedNfts);
-      } catch (error) {
-        console.log(error);
-      }
-
-      setIsLoading(false);
-    },
-    [setIsLoading, address]
-  );
-
-  useEffect(() => {
-    fetchNFTs();
-  }, [fetchNFTs]);
-
-  return isLoading ? (
-    <div className={styles.loading_box}>
-      <p>Loading...</p>
-    </div>
-  ) : (
-    <div className={styles.nft_gallery}>
+  return (
+    <>
       <div className={styles.nfts_display}>
-        {nfts?.length ? (
-          nfts.map((nft) => {
-            return <NftCard key={nft.id.tokenId} nft={nft} />;
+        {ownedNfts?.length ? (
+          ownedNfts.map((nft) => {
+            return (
+              <NftCard key={nft.id.tokenId} nft={nft} onClick={handleClick} />
+            );
           })
         ) : (
           <div className={styles.loading_box}>
-            <p>No NFTs found for the address {address}</p>
+            <p>No NFTs found for this address</p>
           </div>
         )}
       </div>
-    </div>
+      <NftDetail nft={selected} onClose={handleClose} isOpen={isOpen} />
+    </>
+  );
+}
+
+export default function NFTGallery() {
+  const [address] = useState(TEST_ADDRESS);
+  const resource = fetchNftData(address);
+
+  return (
+    <Suspense
+      fallback={
+        <div className={styles.loading_box}>
+          <Spinner />
+        </div>
+      }
+    >
+      <div className={styles.nft_gallery}>
+        <GalleryList resource={resource} />
+      </div>
+    </Suspense>
   );
 }

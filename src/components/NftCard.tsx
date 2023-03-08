@@ -1,71 +1,12 @@
 /* eslint-disable @next/next/no-img-element */
+import { CSSProperties } from "react";
 import Image from "next/image";
-
 import styles from "@/styles/NftGallery.module.css";
-
-export type ID = {
-  tokenId: string;
-  tokenMetadata: { tokenType: string };
-};
-
-export type Metadata = {
-  name: string;
-  image: string;
-  description: string;
-};
-
-export type TokenUri = {
-  gateway: string;
-  raw: string;
-};
-
-export type Contract = {
-  address: string;
-};
-
-export type OpenSea = {
-  imageUrl: string;
-  floorPrice: string;
-  description: string;
-  collectionName: string;
-  safelistRequestStatus: string;
-  twitterUsername: string;
-  lastIngestedAt: string;
-};
-
-export type ContractMetadata = {
-  contractDeployer: string;
-  deployedBlockNumber: number;
-  name: string;
-  openSea: OpenSea;
-  symbol: string;
-  tokenType: string;
-  totalSupply: string;
-};
-
-export type Media = {
-  bytes: number;
-  format: string;
-  gateway: string;
-  raw: string;
-  thumbnail: string;
-};
-
-export type NftProps = {
-  title: string;
-  balance: string;
-  description: string;
-  timeLastUpdated: string;
-  media: Media[];
-  metadata: Metadata;
-  contractMetadata: ContractMetadata;
-  contract: Contract;
-  id: ID;
-  tokenUri: TokenUri;
-};
+import type { NFT, Media } from "@/api/types";
 
 export interface Props {
-  nft: NftProps;
+  nft: NFT;
+  onClick?: (nft: NFT) => void;
 }
 
 function Placeholder() {
@@ -78,33 +19,51 @@ function Placeholder() {
   );
 }
 
+export interface ThumbnailProps {
+  title?: string;
+  media?: Media[];
+  style?: CSSProperties;
+}
+
+export function Thumbnail({ title, media, style }: ThumbnailProps) {
+  const format = media?.length ? media[0].format : "";
+  const thumbnail = media?.length ? media[0].thumbnail : "";
+
+  if (format === "mp4" && media?.length) {
+    return (
+      <video src={media[0].gateway} controls style={style}>
+        Your browser does not support the video tag.
+      </video>
+    );
+  }
+
+  return thumbnail ? (
+    <img alt={title} src={`${thumbnail}`} style={style} />
+  ) : (
+    <Placeholder />
+  );
+}
+
 export default function NftCard(props: Props) {
-  const { nft } = props;
-  const format = nft.media.length ? nft.media[0].format : "";
-  const thumbnail = nft.media.length ? nft.media[0].thumbnail : "";
+  const { nft, onClick } = props;
 
   return (
-    <div className={styles.card_container}>
+    <div
+      className={styles.card_container}
+      onClick={() => onClick && onClick(nft)}
+    >
       <div className={styles.image_container}>
-        {format == "mp4" ? (
-          <video src={nft.media[0].gateway} controls>
-            Your browser does not support the video tag.
-          </video>
-        ) : thumbnail ? (
-          <img alt={nft.title} src={`${thumbnail}`} />
-        ) : (
-          <Placeholder />
-        )}
+        <Thumbnail title={nft.title} media={nft.media} />
       </div>
       <div className={styles.info_container}>
         <div className={styles.title_container}>
-          <h3>{nft.contractMetadata?.openSea?.collectionName ?? nft.title}</h3>
+          <h3>{nft.contractMetadata?.name ?? nft.title}</h3>
         </div>
         <hr className={styles.separator} />
         <div className={styles.symbol_contract_container}>
           <div className={styles.symbol_container}>
             <p>{nft.contractMetadata?.symbol}</p>
-            {nft.contractMetadata?.openSea?.safelistRequestStatus ==
+            {nft.contractMetadata?.openSea?.safelistRequestStatus ===
             "verified" ? (
               <img
                 src={
