@@ -49,18 +49,22 @@ function GalleryList({ resource }: GalleryListProps) {
 
 export default function NFTGallery() {
   const [address] = useState(TEST_ADDRESS);
-  const resource = fetchNftData(address);
+  const resource0 = fetchNftData(address, 0, 4);
+  const resource1 = fetchNftData(address, 0, 8);
 
   return (
     <Suspense
       fallback={
         <div className={styles.loading_box}>
-          <Spinner />
+          <Spinner color="blue.500" />
         </div>
       }
     >
       <div className={styles.nft_gallery}>
-        <GalleryList resource={resource} />
+        <h2 className={styles.nft_gallery_title}>Learning Path</h2>
+        <GalleryList resource={resource0} />
+        <h2 className={styles.nft_gallery_title}>Trending</h2>
+        <GalleryList resource={resource1} />
       </div>
     </Suspense>
   );
