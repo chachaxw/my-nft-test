@@ -1,6 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
 import { CSSProperties } from "react";
-import Image from "next/image";
 import styles from "@/styles/NftGallery.module.css";
 import type { NFT, Media } from "@/api/types";
 import { getTokenId } from "@/utils/utils";
